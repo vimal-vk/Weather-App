@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Result</title>
+</head>
+<body>
+  <% if(message) { %>
+    <% if(message.error==true) { %>
+      <h1>Enter a valid city name</h1>
+    <% } %>
+    <% if(message.error==false) { %>
+      <div>
+        <h2 style="text-align: center">Weather at <%= message.ejsCity %></h2>
+        <img src="http://openweathermap.org/img/wn/<%= message.ejsIcon %>@2x.png" style="float: right" />
+        <h4>Temperature : <%= message.ejsTemperature %> ° <%= message.ejsDegree %></h4>
+        <h4>Pressure : <%= message.ejsPressure %></h4>
+        <h4>Humidity : <%= message.ejsHumidity %></h4>
+      </div>
+    <% } %>
+  <% } %>
+  
+</body>
+</html>

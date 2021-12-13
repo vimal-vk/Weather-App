@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const cheerio = require('cheerio')
 const path = require('path')
 const https = require('https')
 app.use(express.urlencoded({ extended: false }))
@@ -18,7 +19,7 @@ app.get('/retry', async (req, res) => {
 })
  
 
-app.post('/', async (req, res) => {
+app.post('/result', async (req, res) => {
   var { cityName, degree } = req.body
   var unit = 'imperial'
   if (degree == 'C') {
@@ -34,7 +35,7 @@ app.post('/', async (req, res) => {
         var pressure = weatherData.main.pressure
         var humidity = weatherData.main.humidity
         var icon = weatherData.weather[0].icon
-        res.render('index', {
+        res.render('result', {
           message: {
             error:false,
             ejsCity: city,
@@ -47,7 +48,7 @@ app.post('/', async (req, res) => {
         })
       }
       else {
-        res.render('index', {
+        res.render('result', {
           message: {
             error: true
           }
@@ -64,3 +65,6 @@ app.get('*', function(req, res){
 app.listen(port,()=>{
   console.log(`port running at http://localhost:${port}`)
 })
+
+
+//F8J9Nb-LfntMc-header-HiaYvf-LfntMc Yr7JMd-pane-JjiIAe F8J9Nb-LfntMc-header-HiaYvf-LfntMc-d6wfac widget-pane-fade-in"
