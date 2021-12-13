@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+
+  <body>
+    <div class="app">
+      <h1>Weather App</h1>
+      <form action="/" method="post" autocomplete="off">
+        <input
+          type="text"
+          class="form-input"
+          name="cityName"
+          placeholder="Enter the city"
+        />
+        <p>Units</p>
+        <select name="degree" class="form-select">
+          <option value="F">F</option>
+          <option value="C">C</option>
+        </select>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <% if(message) { %> <% if(message.error==true) { %>
+    <h1>Enter a valid city name</h1>
+    <% } %> <% if(message.error==false) { %>
+    <div>
+      <h2 style="text-align: center">Weather at <%= message.ejsCity %></h2>
+      <img
+        src="http://openweathermap.org/img/wn/<%= message.ejsIcon %>@2x.png"
+        style="float: right"
+      />
+      <h4>
+        Temperature : <%= message.ejsTemperature %> ° <%= message.ejsDegree %>
+      </h4>
+      <h4>Pressure : <%= message.ejsPressure %></h4>
+      <h4>Humidity : <%= message.ejsHumidity %></h4>
+    </div>
+    <% } %> <% } %>
+  </body>
+</html>
