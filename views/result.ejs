@@ -1,26 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Result</title>
-</head>
-<body>
-  <% if(message) { %>
-    <% if(message.error==true) { %>
-      <h1>Enter a valid city name</h1>
-    <% } %>
-    <% if(message.error==false) { %>
-      <div>
-        <h2 style="text-align: center">Weather at <%= message.ejsCity %></h2>
-        <img src="http://openweathermap.org/img/wn/<%= message.ejsIcon %>@2x.png" style="float: right" />
-        <h4>Temperature : <%= message.ejsTemperature %> ° <%= message.ejsDegree %></h4>
-        <h4>Pressure : <%= message.ejsPressure %></h4>
-        <h4>Humidity : <%= message.ejsHumidity %></h4>
-      </div>
-    <% } %>
+  <link rel="stylesheet" type="text/css" href="css/result.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+    integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <% var fullData = [] %> 
+  <% for(let i=0;i<past.length;i++){ %>
+    <% fullData.push(past[i]['Date']) %>
+    <% fullData.push(past[i]['temp']) %>
+    <% fullData.push(past[i]['humidity']) %>
+    <% fullData.push(past[i]['pressure']) %>
+    <% fullData.push(past[i]['icon']) %>
+    <% fullData.push(past[i]['windSpeed']) %>
+    <% fullData.push(past[i]['description']) %>
+  <% } %> 
+  <% fullData.push(current.date) %>
+  <% fullData.push(current.main.temp) %>
+  <% fullData.push(current.main.humidity) %>
+  <% fullData.push(current.main.pressure) %>
+  <% fullData.push(current.weather[0].icon) %>
+  <% fullData.push(current.wind.speed) %>
+  <% fullData.push(current.weather[0].description) %>
+  <% for(let i=0;i<future.length;i++){ %>
+    <% fullData.push(future[i]['Date']) %>
+    <% fullData.push(future[i]['temp']) %>
+    <% fullData.push(future[i]['humidity']) %>
+    <% fullData.push(future[i]['pressure']) %>
+    <% fullData.push(future[i]['icon']) %>
+    <% fullData.push(future[i]['windSpeed']) %>
+    <% fullData.push(future[i]['description']) %>
   <% } %>
-  
+  <script>
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var dataTable = new google.visualization.DataTable();
+      dataTable.addColumn('string', 'Date');
+      dataTable.addColumn('number', 'Details');
+      dataTable.addColumn({ type: 'string', role: 'tooltip', 'p': { 'html': true } });
+      dataTable.addColumn({ role: 'style' })
+      var convertableData = []
+      var data = "<%= fullData %>"
+      data = data.split(",")
+      var variable = 0;
+      for(var i=0;i<4;i++){
+        convertableData.push([data[variable].substring(0,data[variable].length-5),Number(data[variable+1]),createHTMLcontent(Number(data[variable + 1]),data[variable+4],Number(data[variable+2]),Number(data[variable+3]),data[variable + 6],Number(data[variable+5])), "red"])
+        variable+=7;
+      }
+      convertableData.push([data[variable].substring(0, data[variable].length - 5), Number(data[variable + 1]), createHTMLcontent(Number(data[variable + 1]), data[variable + 4], Number(data[variable + 2]), Number(data[variable + 3]), data[variable + 6], Number(data[variable + 5])), "gold"])
+      console.log(Number(data[variable + 5]))
+      variable+=7
+      for(var i=0;i<7;i++){
+        convertableData.push([data[variable].substring(0, data[variable].length - 5), Number(data[variable + 1]), createHTMLcontent(Number(data[variable + 1]), data[variable + 4], Number(data[variable + 2]), Number(data[variable + 3]), data[variable + 6], Number(data[variable + 5])), "#4c34eb"])
+        variable += 7;
+      }
+      dataTable.addRows(convertableData);
+      var options = {
+        legend: { position: "none" },
+        bar: { groupWidth: "95%" },
+        focusTarget: 'category',
+        tooltip: { isHtml: true },
+        backgroundColor: {
+          fill: 'transparent',
+          fillOpacity: 0.15
+        },
+        vAxis: {
+          gridlines: {
+            color: 'transparent'
+          },
+          textStyle: { color: '#FFF' }
+        },
+        hAxis: {
+          gridlines: {
+            color: 'transparent'
+          },
+          textStyle: { color: '#FFF' }
+        },
+      };
+
+      function createHTMLcontent(temperature, icon, humidity, pressure, description, windspeed) {
+        return '<div style="padding: 2px;">' +
+          '<img src="http://openweathermap.org/img/wn/' + icon + '@2x.png" alt="" class="image">' +
+          '<h3><i class="fas fa-thermometer-three-quarters"></i> ' + temperature + '° ' + '<%= degree %>' + ' </h3>' +
+          '<h3><i class="fas fa-tint"></i> ' + humidity + ' </h3>' +
+          '<h3>' + pressure + ' pa </h3>' +
+          '<h3><i class="fas fa-wind"></i> ' + windspeed + ' </h3>' +
+          '<h3>' + description + ' </h3>' +
+          '</div>';
+      }
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      chart.draw(dataTable, options);
+    }
+  </script>
+  <title>Weather App</title>
+</head>
+
+<body>
+  <div class="result-div">
+    <div>
+      <div class="sub-div glassy front">
+        <img src=<%= "http://openweathermap.org/img/wn/"+current.weather[0].icon+"@2x.png" %> class="image" alt="">
+        <h3 class="margin"><%= current.weather[0].description %></h3>
+      </div>
+      <div class="main-temperature glassy">
+        <h1 class="temperature"><%= current.main.temp %> ° <%= degree %> </h1>
+        <h3 class="city-style"><%= current.name %> </h3>
+      </div>
+      <div class="sub-div glassy" id="chart_div" style="width: 90%; height: 300px"></div>
+    </div>
+    <div>
+      <div class="sub-temperature">
+        <div class="sub-div glassy">
+          <h2>Today Weather Summary</h2>
+          <h3>Feels like : <%= current.main.feels_like %> ° <%= degree %></h3>
+          <h3>Min Temp : <%= current.main.temp_min %> ° <%= degree %></h3>
+          <h3>Max Temp : <%= current.main.temp_max %>  ° <%= degree %></h3>
+          <h3>Humidity : <%= current.main.humidity %> </h3>
+          <h3>Pressure : <%= current.main.pressure %> pa</h3>
+          <h3>Sea level : <%= current.main.sea_level %> </h3>
+          <h3>Ground level : <%= current.main.grnd_level %> </h3>
+          <h3>Visibility : <%= current.visibility %> </h3>
+        </div>
+      </div>
+      <div class="sub-temperature">
+        <div class="sub-div glassy">
+          <h2>Wind</h2>
+          <h3>Speed : <%= current.wind.speed %> m/s</h3>
+          <h3>Degree : <%= current.wind.deg %> °</h3>
+          <h3>Gust : <%= current.wind.gust %></h3>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
+
 </html>

@@ -1,0 +1,77 @@
+body {
+  margin: 0;
+  background-color: black;
+}
+
+.result-div {
+  background: url("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  display: grid;
+  grid-template-columns: 60% 40%;
+  height: 650px;
+  color: white;
+  margin: 0 auto;
+}
+
+.main-temperature {
+  text-align: center;
+  margin: auto;
+  margin-top: 100px;
+  width: 25%;
+  border-radius: 12px;
+  height: 100px;
+  padding: 30px;
+}
+
+.temperature {
+  display: inline-block;
+  margin: auto;
+  padding: 20px;
+  width: 80%;
+  font-weight: 800;
+}
+
+.sub-temperature {
+  text-align: center;
+  margin: 20px;
+  display: grid;
+  grid-template-columns: 80%;
+  height: fit-content;
+}
+
+.glassy {
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+  border-radius: 12px;
+}
+
+.sub-div {
+  font-size: 14px;
+  margin: 20px;
+  text-align: center;
+}
+
+.image {
+  width: 50px;
+  display: inline;
+}
+.front {
+  padding-left: 5px;
+  padding-right: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.margin {
+  padding: 0px 5px;
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.city-style {
+  margin: 0;
+  font-style: italic;
+}
